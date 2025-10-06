@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Export Zeitraum</title>
+  <script src="https://p.trellocdn.com/power-up.min.js"></script>
+</head>
+<body style="font-family:system-ui;padding:14px;line-height:1.5">
+  <h3 style="margin:0 0 8px">Zeitraum wählen</h3>
+  <label>Startdatum<br><input type="date" id="start" style="width:100%"></label><br><br>
+  <label>Enddatum<br><input type="date" id="end" style="width:100%"></label><br><br>
+  <label><input type="checkbox" id="doneOnly"> Nur Karten mit Status „erledigt“</label><br><br>
+  <button id="go" style="padding:8px 12px;border-radius:8px;cursor:pointer">Weiter</button>
+
+  <script>
+    const t = TrelloPowerUp.iframe();
+    document.getElementById('go').addEventListener('click', async () => {
+      const start = document.getElementById('start').value || '';
+      const end = document.getElementById('end').value || '';
+      const doneOnly = document.getElementById('doneOnly').checked;
+      // Hier nur Rückgabe ins Hauptfenster; echte Logik folgt im nächsten Schritt
+      await t.closePopup();
+      await t.alert({ message: `Zeitraum: ${start || '—'} bis ${end || '—'} | erledigt: ${doneOnly ? 'ja' : 'nein'}` });
+      return;
+    });
+  </script>
+</body>
+</html>
