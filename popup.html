@@ -1,23 +1,39 @@
 <script>
-  var t = TrelloPowerUp.iframe();
+  var t = null;
+  try { t = TrelloPowerUp && TrelloPowerUp.iframe ? TrelloPowerUp.iframe() : null; } catch(e) { t = null; }
 
-  document.getElementById('go').addEventListener('click', function () {
-    var start = document.getElementById('start').value || '—';
-    var end = document.getElementById('end').value || '—';
-    var doneOnly = document.getElementById('doneOnly').checked ? 'ja' : 'nein';
+  var goBtn = document.getElementById('go');
+  if (goBtn) {
+    goBtn.addEventListener('click', function () {
+      var start = (document.getElementById('start') || {}).value || '—';
+      var end = (document.getElementById('end') || {}).value || '—';
+      var doneOnly = (document.getElementById('doneOnly') || {}).checked ? 'ja' : 'nein';
 
-    // 1) Sofort sichtbares Feedback IM POPUP:
-    var s = document.getElementById('status');
-    if (!s) {
-      s = document.createElement('div');
-      s.id = 'status';
-      s.style.marginTop = '10px';
-      s.style.fontFamily = 'system-ui';
-      document.body.appendChild(s);
-    }
-    s.textContent = 'Klick empfangen ✔  Zeitraum: ' + start + ' – ' + end + ' | erledigt: ' + doneOnly;
+      // Sichtbares Feedback IM POPUP (unabhängig von Trello SDK)
+      var s = document.getElementById('status');
+      if (!s) {
+        s = document.createElement('div');
+        s.id = 'status';
+        s.style.marginTop = '10px';
+        s.style.fontFamily = 'system-ui';
+        s.style.fontSize = '14px';
+        document.body.appendChild(s);
+      }
+      s.textContent = 'Klick empfangen ✔  Zeitraum: ' + start + ' – ' + end + ' | erledigt: ' + doneOnly;
 
-    // 2) Trello-Alert anzeigen (ohne closePopup):
-    t.alert({ message: 'Zeitraum: ' + start + ' bis ' + end + ' | erledigt: ' + doneOnly });
-  });
+      // Wenn SDK verfügbar -> Trello-Alert; sonst: Browser-Alert als Fallback
+      if (t && t.alert) {
+        t.alert({ message: 'Zeitraum: ' + start + ' bis ' + end + ' | erledigt: ' + doneOnly });
+      } else {
+        alert('Fallback: Zeitraum ' + start + ' bis ' + end + ' | erledigt: ' + doneOnly);
+      }
+    });
+  } else {
+    // Falls der Button nicht existiert, sofort Hinweis einblenden
+    var warn = document.createElement('div');
+    warn.textContent = 'Kein Button mit id="go" gefunden.';
+    warn.style.color = 'red';
+    warn.style.marginTop = '8px';
+    document.body.appendChild(warn);
+  }
 </script>
