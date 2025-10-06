@@ -10,20 +10,26 @@
   <h1 style="font-family:sans-serif">Power-Up Seite geladen ✅</h1>
   <p>Wenn diese Zeile sichtbar ist, funktioniert das Hosting der Seite.</p>
 
-  <script>
-    function onClick(t){
-      return t.alert({ message: 'Button funktioniert ✅' });
-    }
-    window.TrelloPowerUp.initialize({
-      'board-buttons': function(t){
-        return [{
-          text: 'Export Karten',
-          icon: 'https://trello.com/favicon.ico',
-          condition: 'edit',
-          callback: onClick
-        }];
-      }
+<script>
+  function onClick(t){
+    return t.popup({
+      title: 'Export',
+      url: 'popup.html',   // lädt die eben hochgeladene Datei
+      height: 260
     });
-  </script>
+  }
+
+  window.TrelloPowerUp.initialize({
+    'board-buttons': function(t){
+      return [{
+        text: 'Export Karten',
+        icon: 'https://trello.com/favicon.ico',
+        condition: 'edit',
+        callback: onClick
+      }];
+    }
+  });
+</script>
+
 </body>
 </html>
